@@ -1,4 +1,4 @@
-define(["lodash", "untar", "../build/dist/untar"], function(_, untarDev, untarDist) {
+define(["untar", "../build/dist/untar"], function(untarDev, untarDist) {
 
     function loadFile(path) {
         return new Promise(function(resolve, reject) {
@@ -29,6 +29,16 @@ define(["lodash", "untar", "../build/dist/untar"], function(_, untarDev, untarDi
 
     function loadTestFile(filename) {
         return loadFile("base/spec/data/" + filename);
+    }
+
+    function unique(a) {
+      var arr = [];
+      for ( var i = 0; i < a.length; i++ ) {
+        if ( arr.indexOf( a[ i ] ) == -1 ) {
+          arr.push( a[ i ] );
+        }
+      }
+      return arr;
     }
 
     var fileNames = [
@@ -173,18 +183,20 @@ define(["lodash", "untar", "../build/dist/untar"], function(_, untarDev, untarDi
 						return loadTestBuffer().then(function(buffer) {
 							return untar(buffer)
 							.then(function(files) {
-								//console.debug("'getBlobUrl() should return a unique ObjectURL for each file' loaded and untar'ed the test buffer.");
 
-								var urls = _.map(files, function(file) { return file.getBlobUrl(); });
+                var filesLength = files.length;
+                var urls = [];
+                for(var i = 0; i < filesLength; ++i){
+                  var file = files[i];
+                  urls.push(file.getBlobUrl());
+                }
 
-								expect(_.some(urls, function(url) { return url === null; } )).toBe(false);
-
-								expect(_.uniq(urls).length).toBe(urls.length);
-
-								urlsCopy = _.map(files, function(file) { return file.getBlobUrl(); });
-								expect(urlsCopy).toEqual(urls);
-
-								//console.debug("'getBlobUrl() should return a unique ObjectURL for each file' ran all expectations");
+                var urlsLength = urls.length;
+                for(i =0; i < urlsLength; ++i){
+                  var url = urls[i];
+                  expect(url === null).toBe(false);
+                }
+								expect(unique(urls).length).toBe(urls.length);
 							});
 						})
 						.then(done)
