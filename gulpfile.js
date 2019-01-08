@@ -8,8 +8,7 @@ var gulp = require("gulp"),
 	jshint = require("gulp-jshint"),
 	KarmaServer = require('karma').Server,
 	path = require("path"),
-	filter = require("gulp-filter"),
-    webserver = require('gulp-webserver');
+	filter = require("gulp-filter");
 
 gulp.task("build:dev", function() {
 	var f = filter(['*', '!untar-worker.js'], { restore: true });
@@ -69,7 +68,7 @@ gulp.task("build:dist", function() {
 			namespace: function() { return "untar"; }
 		}))
 		.pipe(uglify())
-        .pipe(sourcemaps.write("./"))
+    .pipe(sourcemaps.write("./"))
 		.pipe(gulp.dest("build/dist"));
 });
 
@@ -80,24 +79,11 @@ gulp.task("jshint:specs", function() {
 		.pipe(jshint.reporter("fail"));
 });
 
-gulp.task("default", ["build:dev", "build:dist"]);
+gulp.task("default", ["build:dist"]);
 
-gulp.task("test", ["jshint:specs", "build:dev", "build:dist"], function(done) {
+gulp.task("test", ["jshint:specs", "build:dev"], function(done) {
 	new KarmaServer({
 	    configFile: __dirname + '/karma.conf.js',
 	    singleRun: true
 	  }, done).start();
-});
-
-gulp.task("example", ["build:dev"], function() {
-	gulp.src("./")
-		.pipe(webserver({
-            directoryListing: false,
-			livereload: true,
-			open: "example/",
-            proxies: [
-                { source: "/base", target: "http://localhost:8000/"}
-            ],
-            port: 8000
-		}));
 });

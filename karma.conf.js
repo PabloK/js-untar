@@ -2,7 +2,7 @@
 // Generated on Wed Aug 26 2015 11:44:53 GMT+0200 (Vesteuropa, sommertid)
 
 module.exports = function(config) {
-  var configuration = {
+  const configuration = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -16,7 +16,6 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'https://www.promisejs.org/polyfills/promise-6.1.0.js',
-      //'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.min.js',
       {pattern: 'build/**/**/*.js', included: false},
       {pattern: 'spec/**/*.*', included: false},
       'test-main.js'
@@ -66,7 +65,7 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
-    
+
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
@@ -74,10 +73,10 @@ module.exports = function(config) {
       }
     }
   };
-    
+
   if (process.env.TRAVIS) {
     configuration.browsers = ['Chrome_travis_ci'];
   }
-  
+
   config.set(configuration)
-}
+};
